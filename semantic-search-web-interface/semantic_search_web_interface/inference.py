@@ -13,16 +13,16 @@ cross_encoder = CrossEncoder(cross_encoder_model)
 pre_cross_encode_k = 50
 results_to_show = 10
 
-plots = pd.read_csv("/home/sayantan/movie-plot-nlp-project/Data/wiki_with_revenue.csv",
+plots = pd.read_csv("/home/sayantan/DataScienceBootcamp/movie-plot-nlp-project/Data/wiki_with_revenue.csv",
                     compression="zip", converters={'to_embed': ast.literal_eval})
 test_queries = pd.read_csv(
-    "/home/sayantan/movie-plot-nlp-project/Data/summaries_test.csv", compression="zip")
+    "/home/sayantan/DataScienceBootcamp/movie-plot-nlp-project/Data/summaries_test.csv", compression="zip")
 id_and_summary = pd.read_csv(
-    "/home/sayantan/movie-plot-nlp-project/Data/id_and_summary.csv", compression="zip")
+    "/home/sayantan/DataScienceBootcamp/movie-plot-nlp-project/Data/id_and_summary.csv", compression="zip")
 
 # If running on a non-GPU kernel
 corpus_embeddings = torch.load(
-    '/home/sayantan/movie-plot-nlp-project/inference-models/corpus_embeddings.pt', map_location=torch.device('cpu'))
+    '/home/sayantan/DataScienceBootcamp/movie-plot-nlp-project/inference-models/corpus_embeddings.pt', map_location=torch.device('cpu'))
 
 
 def semantic_query(query_string, constraints, corpus_embeddings=corpus_embeddings, bi_encoder=bi_encoder, cross_encoder=cross_encoder, id_and_summary=id_and_summary, wiki_dataset=plots):

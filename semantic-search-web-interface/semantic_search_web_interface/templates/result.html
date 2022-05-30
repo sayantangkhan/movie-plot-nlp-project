@@ -6,7 +6,6 @@
     {% for res in search_results %}
     <div class='singleres'>
         <p><a href="{{ res[0][2] }}">{{ res[0][0] }} ({{ res[0][1] }})</a></p>
-        <br>
         <p>Score: {{ res[1] }}</p>
     </div>
     {% endfor %}
