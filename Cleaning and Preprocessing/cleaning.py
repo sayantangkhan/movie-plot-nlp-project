@@ -54,7 +54,7 @@ def remove_useless(df):
     return df.loc[mask]
 
 if __name__ == "__main__":
-    movie_df = pd.read_csv("Data/wiki_movie_plots_deduped.csv")
+    movie_df = pd.read_csv("../Data/wiki_movie_plots_deduped.csv")
     remove_citations(movie_df)
     remove_useless(movie_df)
-    movie_df.to_csv("Data/wiki_movies_no_cites.csv")
+    movie_df.to_csv("../Data/wiki_movies_no_cites.csv")
