@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="searchbox">
+    <form method="post">
+        <label for="title">{% block title %} Search query {% endblock %}</label>
+        <br>
+        <input type="text" size="50" name="query" placeholder="Enter search query"
+            value="{{ request.form['query'] }}"></input>
+        <br>
+        <div class="other">Genre</div>
+        <SELECT name="genre">
+            {% for g in genre_choices %}
+            <OPTION value={{g}}>{{g}}</option>
+            {% endfor %}
+        </SELECT>
+        <br>
+        <button type="submit">Search</button>
+    </form>
+</div>
+{% endblock %}
