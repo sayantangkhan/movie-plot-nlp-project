@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 /Data/id_and_summary.csv
 /inference-models/corpus_embeddings.pt
+.DS_Store
