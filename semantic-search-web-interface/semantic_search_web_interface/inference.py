@@ -10,7 +10,7 @@ bi_encoder = SentenceTransformer(bi_encoder_model)
 bi_encoder.max_seq_length = 256  # Truncate long passages to 256 tokens
 cross_encoder = CrossEncoder(cross_encoder_model)
 
-pre_cross_encode_k = 50
+pre_cross_encode_k = 100
 results_to_show = 10
 
 plots = pd.read_csv("/home/sayantan/DataScienceBootcamp/movie-plot-nlp-project/Data/wiki_with_revenue.csv",
