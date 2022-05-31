@@ -8,10 +8,10 @@
         <input type="text" size="50" name="query" placeholder="Enter search query"
             value="{{ request.form['query'] }}"></input>
         <br>
-        <div class="other">Genre</div>
-        <SELECT name="genre">
-            {% for g in genre_choices %}
-            <OPTION value={{g}}>{{g}}</option>
+        <div class="other">Approximate year</div>
+        <SELECT name="year">
+            {% for y in year_choices %}
+            <OPTION value={{y}}>{{y}}</option>
             {% endfor %}
         </SELECT>
         <br>
