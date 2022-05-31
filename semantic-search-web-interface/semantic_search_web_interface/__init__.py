@@ -34,7 +34,7 @@ def create_app():
             year = request.form['year']
             #genre = request.form['genre']
             logger.debug("Query: {0}".format(query))
-            logger.debug("Genre: {0}".format(genre))
+            logger.debug("year: {0}".format(year))
             global SEARCH_RESULTS
             SEARCH_RESULTS = semantic_query(query, {'year': year, 'genre': "Any"})
             return redirect('/result')

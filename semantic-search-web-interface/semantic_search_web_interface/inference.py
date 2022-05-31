@@ -14,8 +14,8 @@ pre_cross_encode_k = 100
 pre_cross_encode_k_constraints = 300
 results_to_show = 10
 
-plots = pd.read_csv("/home/sayantan/DataScienceBootcamp/movie-plot-nlp-project/Data/wiki_with_revenue.csv",
-                    compression="zip", converters={'to_embed': ast.literal_eval})
+plots = pd.read_csv("/home/sayantan/DataScienceBootcamp/movie-plot-nlp-project/Data/wiki_with_revenue.zip",
+                     converters={'to_embed': ast.literal_eval})
 id_and_summary = pd.read_csv(
     "/home/sayantan/DataScienceBootcamp/movie-plot-nlp-project/Data/id_and_summary.csv", compression="zip")
 
@@ -26,13 +26,13 @@ corpus_embeddings = torch.load(
 def satisfies_genre_constraint(genre, movie_id, wiki_dataset):
     if genre == "Any":
         return True
-    return wiki_dataset['Genre'] == genre
+    return wiki_dataset['Genre'][movie_id] == genre
 
 def satisfies_year_constraint(year_string, movie_id, wiki_dataset):
     if year_string == "Any":
         return True
     year = int(year_string)
-    return year-10 <= wiki_dataset['Year'] <= year+10
+    return year-10 <= wiki_dataset['Release Year'][movie_id] <= year+10
 
 def semantic_query(query_string, constraints, corpus_embeddings=corpus_embeddings, bi_encoder=bi_encoder, cross_encoder=cross_encoder, id_and_summary=id_and_summary, wiki_dataset=plots):
     constraint_genre = constraints['genre']
