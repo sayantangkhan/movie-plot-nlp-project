@@ -7,23 +7,76 @@ In the README, we describe the data gathering process, the preprocessing and cle
 
 ### Table of contents
 1. [Data gathering](#data-gathering)
-    1. [Wikipedia plot list](#wikipedia-plots)
-    2. [Scraping IMDB](#imdb-scraping)
-    3. [Generating data using T5](#summary-generation)
+    1. [Scraping IMDB](#imdb-scraping)
+    2. [Generating data using T5](#summary-generation)
 2. [Preprocessing and cleanup](#preprocessing)
 3. [Classifier models](#classifier)
 4. [Web frontend](#web-frontend)
 
 ## Data gathering <a name="data-gathering"></a>
 
-### Wikipedia plot list <a name="wikipedia-plots"></a>
+We needed two kinds of data for the semantic search engine: first we needed the plot summaries of all the movies we could get. These are the movies that are actually searchable by the search engine.
+This dataset was a combination of the [Kaggle Wikipedia Movie Plots](https://www.kaggle.com/datasets/jrobischon/wikipedia-movie-plots) dataset and the [CMU Movie Summary Corpus](http://www.cs.cmu.edu/~ark/personas/).
+
+The second kind of dataset we needed was a collection of example queries users would query the search engine for; we planned to train and test the performance on such a dataset.
+For the search engine to be a good search engine, we wanted it to be able to identify the movie based on very little detail, i.e. search queries needn't have names of characters involved (or actors), and just describe part of the plot in broad strokes.
+If the searches were more detailed, traditional search engine methods would suffice, just using keyword based searches.
+
+However, we did not have such an collection of user searches along with movies they were searching for.
+To get this data, we tried two different approaches. 
 
 ### Scraping IMDB <a name="imdb-scraping"></a>
 
+The first approach was to scrape IMDB user submitted summaries for short (and hopefully vague) summaries that could serve as a proxy for search queries users would make when searching for the corresponding movie.
+
+TODO: Whoever did the scraping should fill in some details of how the scraping was done, or link to the annotated notebook that did scraping.
+
 ### Generating data using T5 <a name="summary-generation"></a>
+
+The other approach we tried in parallel with the scraping was to generate reasonably vague queries from the plot summary using a pre-trained text summarizer.
+The hope was that the text summarizer would leave out a lot of details, and get rid of most identifying keywords, leaving only broad outlines.
+
+[This notebook](notebooks/exploratory/plot-summarizer.ipynb) displays what the summary looks like for different pre-trained text summarizer.
+Based on the output, we decided that the T5 summarizer generated the summary that left out the most keywords, making it the most suitable for our purposes.
 
 ## Preprocessing and cleanup <a name="preprocessing"></a>
 
+TODO: Link to annotated notebook and/or describe what we had to do.
+
 ## Classifier models <a name="classifier"></a>
 
+We tried out two different approaches to classifying queries: one of them is based on [Sentence Embeddings](https://www.sbert.net/index.html): this method is called _Embed-and-Rerank_ and the other is the more classical [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25).
+
+### Embed-and-Rerank
+
+Embed-and-Rerank is a 3-step process.
+
+1. Take the corpus of all wikipedia plots, and break them up into chunks of 256 tokens, since that's the most the neural network can handle. This results in a large collection of plot summary fragments, labelled by the movie they are from.
+2. The corpus of summary fragments is then embedded in
+using a context sensitive sentence embedder. We use a BERT derived model trained on the MS-MARCO dataset. Using the same embedder, we also embed the search query string into the vector space, and then pick out the closest 100 corpus entries using a cosine-similarity metric. These 100 points are an initial guess for the movie the query string is referencing.
+3. Finally, we run the query string and each of the 100 guesses through a cross-encoder, a different neural network that outputs a similarity score based on semantics between two input sentences. We pick the top 10 scoring movies as search results for the input query.
+
+With this approach, we achieved 84% accuracy on the IMDB query dataset, which is much higher than the baseline 21% obtained with a naïve substring similarity search.
+We also looked at some examples of misclassifications (see the [notebook](notebooks/testing/embed_and_rerank.ipynb) for examples) and observed that the classifier misclassified on queries that referred to the global structure of the plot, i.e. referring to events that happen at the beginning and the end of the movie.
+However, we break up the plot into chunks of 256 words, which means for long plots, the beginning and end are in different chunks.
+
+This can be gotten around by increasing the max tokens the sentence embedder can consume, but this slows down inference considerably which is why we chose not to.
+
+### Okapi BM25
+We implemented this model to compare it to Embed-and-Rerank. This is based on TF-IDF approach, and does not use neural networks.
+Despite this, this model also achieves 84% accuracy on the IMDB dataset, although its misclassifications are of a different nature.
+
+Since this model just uses term-frequency, it does not understand synonyms, and fails to classify correctly when synonymous terms are present in the query and the plot summary.
+Thus despite doing well on the test set, it's still not suitable for the search engine, and the fact it does so well on the test set is an artifact of the test set rather than a quality of the model.
+
 ## Web frontend <a name="web-frontend"></a>
+
+The front-end is built in [Flask](https://flask.palletsprojects.com/en/2.1.x/).
+To build and run the web-server, navigate to [web_interface](web_interface), and run the following commands.
+```
+poetry env use python3.8
+poetry install
+poetry shell
+flask run
+```
+Click on [this link](http://jupyter.sayantankhan.io/search) to go to the hosted version of the web-interface.
