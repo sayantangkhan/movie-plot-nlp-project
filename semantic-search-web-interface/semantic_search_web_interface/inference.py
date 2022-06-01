@@ -39,6 +39,7 @@ def semantic_query(query_string, constraints, corpus_embeddings=corpus_embedding
     constraint_year = constraints['year']
 
     if not (constraint_genre == "Any" and constraint_year == "Any"):
+<<<<<<< HEAD
         top_k = pre_cross_encode_k_constraints
     else:
         top_k = pre_cross_encode_k
@@ -46,6 +47,13 @@ def semantic_query(query_string, constraints, corpus_embeddings=corpus_embedding
     query_embedding = bi_encoder.encode(query_string, convert_to_tensor=True)
     pre_cross_encode_hits = util.semantic_search(
         query_embedding, corpus_embeddings, top_k=top_k)
+=======
+        pre_cross_encode_k = pre_cross_encode_k_constraints
+
+    query_embedding = bi_encoder.encode(query_string, convert_to_tensor=True)
+    pre_cross_encode_hits = util.semantic_search(
+        query_embedding, corpus_embeddings, top_k=pre_cross_encode_k)
+>>>>>>> 03e98cd2fdf13a236d5bb27979819e07c6fc1e40
 
     cross_inp = [[query_string, id_and_summary['to_embed']
                   [hit['corpus_id']]] for hit in pre_cross_encode_hits[0]]
