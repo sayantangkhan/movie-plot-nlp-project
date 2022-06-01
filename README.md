@@ -27,9 +27,13 @@ To get this data, we tried two different approaches.
 
 ### Scraping IMDB <a name="imdb-scraping"></a>
 
-The first approach was to scrape IMDB user submitted summaries for short (and hopefully vague) summaries that could serve as a proxy for search queries users would make when searching for the corresponding movie.
+The first approach was to scrape IMDB user submitted summaries for short (and hopefully vague) summaries that could serve as a proxy for search queries users would make when searching for the corresponding movie. Our process was as follows:
 
-TODO: Whoever did the scraping should fill in some details of how the scraping was done, or link to the annotated notebook that did scraping.
+First, any movie on IMDB is given a distinct IMDB ID that serves as an identifier. Conveniently, any link pertaining to a particular movie is in one-to-one correspondence with its unique IMDB identifier. So, user generated summaries were always on the same URL---the only change was the IMDB ID. 
+
+Then, we utilized the requests module in concert with BeautifulSoup in order to scrape the user generated data from IMDB. We implemented the time module to add delay in each iteration of the for-loop so we would not overburden IMDB's servers. 
+
+Due to the lengthy run time and other unknowns (internet cutting off, laptop rebooting, etc.), we had the scraper save its output periodically to Google Drive. When a crash occured, we rebooted the program at the last iteration and continued from there. Once all data had been scraped, we concatenated the CSV files and added them to the existing data as a new column. This whole process was for the first user generated summary; later on, we repeated this process for the second user generated summary (when available) as well.
 
 ### Generating data using T5 <a name="summary-generation"></a>
 
