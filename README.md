@@ -45,7 +45,20 @@ Based on the output, we decided that the T5 summarizer generated the summary tha
 
 ## Preprocessing and cleanup <a name="preprocessing"></a>
 
-TODO: Link to annotated notebook and/or describe what we had to do.
+The Kaggle dataset contained various wikipedia-style citation artifacts (such as \[1\] or \[citation needed\]), which we cleaned from the dataset. Using the module NLTK, we built a tool to split longer plot descriptions into pieces (halves and thirds, based on the number of sentences) for use on the wikipedia plot summaries, to build our vector embedding.
+
+Every movie initially had string representing a list of genres associated to it from both the Kaggle & CMU datasets. We wanted standard, high-level genres for use in the genre selector on the interface. To do this, we did the following.
++ Standardized spellings for genres (e.g., "sci-fi" and "science fiction" both appeared, so we standardized to "science-fiction").
++ Standardized separators, since sometimes genres could be separated with "/", ",", " - ", or just a space " ".
++ Added some additional broader genres for smaller subgenres (e.g., movies with the genres "slasher" or "zombie" got the genre "horror" added to the list).
++ Broke intersectional genres into broader genres (e.g., "romantic comedy" split into the two genres "romance" and "comedy"). 
+We did this to both lists of associated genres, and merged them together.
+
+We eventually plan to improve the web interface and allow for filtering by cast members. To prepare for this, we also cleaned the cast & director info. Originally, the lists of directors and of cast members were linked in multiple ways (sometime with "and", "/", or ","). We standardized them to all be separated by commas. And sometimes, the lists would start with the word "Director: " or "Cast: ", which we removed.
+
+We also had to deal with some duplicated data. For Kaggle datasets, some movies had duplicated URLs, usually due to several different releases (e.g., in different languages) with different titles sharing the same wikipedia page. For those, we dropped all but the first entry with that URL. We were then still left with some Kaggle and CMU entries which shared a title and release year; for scraped IMDB data, a few movies had duplicated IMDB ids. This was a small percentage of the original data, so we deleted all copies of these remaining duplicates.
+
+At the end, we merged the Kaggle, CMU, and scraped IMDB data based on movies that had the same title & release year. 
 
 ## Classifier models <a name="classifier"></a>
 
