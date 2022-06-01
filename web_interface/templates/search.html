@@ -15,6 +15,13 @@
             {% endfor %}
         </SELECT>
         <br>
+	<div class="other">Genre</div>
+        <SELECT name="genre">
+            {% for g in genre_choices %}
+            <OPTION value={{g}}>{{g}}</option>
+            {% endfor %}
+        </SELECT>
+        <br>
         <button type="submit">Search</button>
     </form>
 </div>

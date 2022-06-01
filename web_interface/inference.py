@@ -11,22 +11,25 @@ bi_encoder.max_seq_length = 256  # Truncate long passages to 256 tokens
 cross_encoder = CrossEncoder(cross_encoder_model)
 
 pre_cross_encode_k = 100
-pre_cross_encode_k_constraints = 300
+pre_cross_encode_k_constraints = 200
 results_to_show = 10
 
-plots = pd.read_csv("/home/sayantan/DataScienceBootcamp/movie-plot-nlp-project/Data/wiki_with_revenue.zip",
-                     converters={'to_embed': ast.literal_eval})
+plots = pd.read_pickle("../data/wikipedia_plots.pkl")
 id_and_summary = pd.read_csv(
-    "/home/sayantan/DataScienceBootcamp/movie-plot-nlp-project/Data/id_and_summary.csv", compression="zip")
+    "../data/corpus_indices.csv.zip")
 
 # If running on a non-GPU kernel
 corpus_embeddings = torch.load(
-    '/home/sayantan/DataScienceBootcamp/movie-plot-nlp-project/inference-models/corpus_embeddings.pt', map_location=torch.device('cpu'))
+    '../data/embedded_corpus_tensor.pt', map_location=torch.device('cpu'))
 
 def satisfies_genre_constraint(genre, movie_id, wiki_dataset):
     if genre == "Any":
         return True
-    return wiki_dataset['Genre'][movie_id] == genre
+    movie_genres = wiki_dataset['Genre'][movie_id]
+    if genre == "science fiction":
+        return "science fiction" in movie_genres or "science-fiction" in movie_genres
+    else:
+        return genre in movie_genres
 
 def satisfies_year_constraint(year_string, movie_id, wiki_dataset):
     if year_string == "Any":
