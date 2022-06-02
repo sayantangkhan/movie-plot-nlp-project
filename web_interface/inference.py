@@ -52,7 +52,7 @@ def semantic_query(query_string, constraints, corpus_embeddings=corpus_embedding
 
     cross_inp = [[query_string, id_and_summary['to_embed']
                   [hit['corpus_id']]] for hit in pre_cross_encode_hits[0]]
-    cross_scores = cross_encoder.predict(cross_inp)
+    cross_scores = cross_encoder.predict(cross_inp, activation_fct=torch.nn.Sigmoid())
     cross_encoder_res = sorted(
         enumerate(cross_scores), key=lambda x: x[1], reverse=True)
 
