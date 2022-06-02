@@ -40,8 +40,8 @@ Due to the lengthy run time and other unknowns (internet cutting off, laptop reb
 The other approach we tried in parallel with the scraping was to generate reasonably vague queries from the plot summary using a pre-trained text summarizer.
 The hope was that the text summarizer would leave out a lot of details, and get rid of most identifying keywords, leaving only broad outlines.
 
-[This notebook](notebooks/exploratory/plot-summarizer.ipynb) displays what the summary looks like for different pre-trained text summarizer.
-Based on the output, we decided that the T5 summarizer generated the summary that left out the most keywords, making it the most suitable for our purposes.
+[This notebook](notebooks/cleaning-and-preprocessing/plot-summarizer.ipynb) displays what the summary looks like for different pre-trained text summarizers.
+Based on the output, we decided that the [T5 summarizer](https://huggingface.co/docs/transformers/model_doc/t5) generated the summary that left out the most keywords, making it the most suitable for our purposes.
 
 ## Preprocessing and cleanup <a name="preprocessing"></a>
 
