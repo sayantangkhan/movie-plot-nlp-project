@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<p class="help">
+Looking for a movie you watched, but can't remember the title? This is the tool for you! Enter some things you remember about the movie in the search bar. If you'd like to narrow the results, you can restrict yourself to a particular genre and/or decade. Then hit search!
+</p>
 <div class="searchbox">
     <form method="post">
         <label for="title">{% block title %} Search query {% endblock %}</label>

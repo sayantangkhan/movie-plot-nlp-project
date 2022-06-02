@@ -10,4 +10,10 @@
     </div>
     {% endfor %}
 </div>
+<p class="help">
+{{helpful_message}}
+</p>
+<div class="buttondiv">
+<a class="button" href="{{url_for('index')}}">Try Again</a>
+</div>
 {% endblock %}

@@ -38,4 +38,11 @@ def search_page():
 
 @app.route('/result')
 def result_page():
-    return render_template('result.html', search_results=SEARCH_RESULTS)
+    if len(SEARCH_RESULTS)==0:
+        message = "We couldn't find any movies matching these criteria! Try broadening your search by setting the approximate year and genre options to 'Any'. Or, try altering your search query."
+    elif len(SEARCH_RESULTS)<8:
+        message = "We found a few movies matching your criteria. If yours isn't in this list, try broadening your search by setting the approximate year and genre options to 'Any'. Or, try altering your search query."
+    elif len(SEARCH_RESULTS)>=10:
+        message = "We found a lot of movies matching your criteria! If yours isn't in this list, try narrowing your search by selecting the genre and/or approximate year of release. Or, try altering your search query."
+    return render_template('result.html', search_results=SEARCH_RESULTS,
+                            helpful_message = message)
