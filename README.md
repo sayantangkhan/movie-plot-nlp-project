@@ -45,9 +45,9 @@ Based on the output, we decided that the [T5 summarizer](https://huggingface.co/
 
 ## Preprocessing and cleanup <a name="preprocessing"></a>
 
-The Kaggle dataset contained various wikipedia-style citation artifacts (such as \[1\] or \[citation needed\]), which we cleaned from the dataset. Using the module NLTK, we built a tool to split longer plot descriptions into pieces (halves and thirds, based on the number of sentences) for use on the wikipedia plot summaries, to build our vector embedding.
+The Kaggle dataset contained various wikipedia-style citation artifacts (such as \[1\] or \[citation needed\]), which we cleaned from the dataset. Using the module NLTK, we built a tool to split longer plot descriptions into pieces (halves and thirds, based on the number of sentences) for use on the wikipedia plot summaries, and then to build our vector embedding.
 
-Every movie initially had string representing a list of genres associated to it from both the Kaggle & CMU datasets. We wanted standard, high-level genres for use in the genre selector on the interface. To do this, we did the following.
+Every movie initially had a string representing a list of genres associated to it from both the Kaggle & CMU datasets. We wanted standardized, high-level genres for use in the genre selector on the interface. To do this, we did the following.
 + Standardized spellings for genres (e.g., "sci-fi" and "science fiction" both appeared, so we standardized to "science-fiction").
 + Standardized separators, since sometimes genres could be separated with "/", ",", " - ", or just a space " ".
 + Added some additional broader genres for smaller subgenres (e.g., movies with the genres "slasher" or "zombie" got the genre "horror" added to the list).
@@ -68,16 +68,15 @@ We tried out two different approaches to classifying queries: one of them is bas
 
 Embed-and-Rerank is a 3-step process.
 
-1. Take the corpus of all wikipedia plots, and break them up into chunks of 256 tokens, since that's the most the neural network can handle. This results in a large collection of plot summary fragments, labelled by the movie they are from.
-2. The corpus of summary fragments is then embedded in
-using a context sensitive sentence embedder. We use a BERT derived model trained on the MS-MARCO dataset. Using the same embedder, we also embed the search query string into the vector space, and then pick out the closest 100 corpus entries using a cosine-similarity metric. These 100 points are an initial guess for the movie the query string is referencing.
+1. Take the corpus of all wikipedia plots and break them up into chunks of 256 tokens, since that is the most the neural network can handle. This results in a large collection of plot summary fragments, labelled by the movie they are from.
+2. The corpus of summary fragments is then embedded in a vector space using a context sensitive sentence embedder. We use a BERT derived model trained on the MS-MARCO dataset. Using the same embedder, we also embed the search query string into the vector space, and then pick out the closest 100 corpus entries using a cosine-similarity metric. These 100 points are an initial guess for the movie the query string is referencing.
 3. Finally, we run the query string and each of the 100 guesses through a cross-encoder, a different neural network that outputs a similarity score based on semantics between two input sentences. We pick the top 10 scoring movies as search results for the input query.
 
 With this approach, we achieved 84% accuracy on the IMDB query dataset, which is much higher than the baseline 21% obtained with a naïve substring similarity search.
 We also looked at some examples of misclassifications (see the [notebook](notebooks/testing/embed_and_rerank.ipynb) for examples) and observed that the classifier misclassified on queries that referred to the global structure of the plot, i.e. referring to events that happen at the beginning and the end of the movie.
-However, we break up the plot into chunks of 256 words, which means for long plots, the beginning and end are in different chunks.
+However, we broke up the plot into chunks of 256 words and so for long plots, the beginning and end are in different chunks.
 
-This can be gotten around by increasing the max tokens the sentence embedder can consume, but this slows down inference considerably which is why we chose not to.
+This could be solved by increasing the max tokens the sentence embedder can intake, but this slows down inference considerably (which is why we chose not to given the time constraints).
 
 ### Okapi BM25
 We implemented this model to compare it to Embed-and-Rerank. This is based on TF-IDF approach, and does not use neural networks.
