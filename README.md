@@ -83,7 +83,7 @@ We implemented this model to compare it to Embed-and-Rerank. Okapi is based on a
 Despite this, this model also achieves 84% accuracy on the IMDB dataset, although its misclassifications are of a different nature.
 
 Since the Okapi model just uses term-frequency, it does not understand synonyms, and fails to classify correctly when synonymous terms are present in the query and the plot summary.
-Despite doing well on the test set, it is still not suitable for the search engine, and the fact it does so well on the test set is an artifact of the test set rather than a quality of the model.
+Despite doing well on the test set, the types of errors Okapi made were not suitable for this search engine's purposes; that is, we would like the model to be more robust against different words a user may choose to describe a plot. Therefore, this model was not part of the final product. 
 
 ## Web frontend <a name="web-frontend"></a>
 
