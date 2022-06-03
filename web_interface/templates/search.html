@@ -2,28 +2,30 @@
 
 {% block content %}
 <p class="help">
-Looking for a movie you watched, but can't remember the title? This is the tool for you! Enter some things you remember about the movie in the search bar. If you'd like to narrow the results, you can restrict yourself to a particular genre and/or decade. Then hit search!
+Looking for a movie you watched, but can't remember the title? This is the tool for you! Enter some things you remember about the movie in the search bar. If you'd like to narrow the results, you can restrict yourself to a particular genre and/or approximate year of release. Then hit search!
 </p>
 <div class="searchbox">
     <form method="post">
-        <label for="title">{% block title %} Search query {% endblock %}</label>
+        <label for="query">{% block title %} Search query {% endblock %}</label>
         <br>
-        <input type="text" size="50" name="query" placeholder="Enter search query"
-            value="{{ request.form['query'] }}"></input>
+        <input type="text" size="50" name="query" id="query" placeholder="Enter search query"
+            value="{{ request.form['query'] }}">
         <br>
-        <div class="other">Approximate year</div>
-        <SELECT name="year">
+      <div class="optional">
+        <label for="year" class="other">Approximate year</label>
+        <SELECT name="year" id="year">
             {% for y in year_choices %}
             <OPTION value={{y}}>{{y}}</option>
             {% endfor %}
         </SELECT>
         <br>
-	<div class="other">Genre</div>
-        <SELECT name="genre">
+	    <label for="genre" class="other">Genre</label>
+        <SELECT name="genre" id="genre">
             {% for g in genre_choices %}
             <OPTION value={{g}}>{{g}}</option>
             {% endfor %}
         </SELECT>
+      </div>
         <br>
         <button type="submit">Search</button>
     </form>
