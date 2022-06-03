@@ -125,7 +125,14 @@ INPUT/OUTPUT:
 + Data/summaries.csv
 
 
-## Splitting plot<a name="plot-split"></a>
+## Fragmenting long plot<a name="plot-split"></a>
 
-The notebook [imdb_summaries](imdb_summaries.ipynb) takes the long plot descriptions from wikipedia and breaks long paragraphs into chunks with at most 256 tokens (words) each.
+To vectorize the plot descriptions, we need to break the plot into shorter trunks.
+The notebook [imdb_summaries](imdb_summaries.ipynb) takes the long plot descriptions from wikipedia and breaks long paragraphs into chunks with at most 256 tokens (words) each, in a way that doesn't split up sentences, and which doesn't mix sentences from different paragraphs within the same chunk.
+
+INPUT:
++ Data/with_imdb_scraped_no_dpus_2.csv
+
+OUTPUT:
++ Data/imdb_plots.csv
 
