@@ -40,7 +40,7 @@ def search_page():
 def result_page():
     if len(SEARCH_RESULTS)==0:
         message = "We couldn't find any movies matching these criteria! Try broadening your search by setting the approximate year and genre options to 'Any'. Or, try altering your search query."
-    elif len(SEARCH_RESULTS)<8:
+    elif len(SEARCH_RESULTS)<10:
         message = "We found a few movies matching your criteria. If yours isn't in this list, try broadening your search by setting the approximate year and genre options to 'Any'. Or, try altering your search query."
     elif len(SEARCH_RESULTS)>=10:
         message = "We found a lot of movies matching your criteria! If yours isn't in this list, try narrowing your search by selecting the genre and/or approximate year of release. Or, try altering your search query."
