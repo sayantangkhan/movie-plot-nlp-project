@@ -3,13 +3,13 @@ These are all of the notebooks used for data gathering, data cleaning, data expl
 ### Table of contents
 1. [Data gathering](#data-gathering)
 2. [Data cleaning](#data-cleaning)
-  1. [Removing citations](#citation-clean)
-  2. [Genre cleaning](#genre-clean)
-  3. [Prep for future](#prep-clean)
+   1. [Removing citations](#citation-clean)
+   2. [Genre cleaning](#genre-clean)
+   3. [Prep for future](#prep-clean)
 3. [Preprocessing](#preprocessing)
-  1. [Generating Wikipedia summary fragments](#wiki-summary)
-  2. [Generating cross-encoder training data](#encoder-train-data)
-  3. [Splitting plot](#plot-split)
+   1. [Generating Wikipedia summary fragments](#wiki-summary)
+   2. [Generating cross-encoder training data](#encoder-train-data)
+   3. [Splitting plot](#plot-split)
 
 # Data gathering <a name="data-gathering"></a>
 
@@ -26,20 +26,20 @@ This data is then used in the  notebook [Combined_Yili_and_Ethan_Scrape](Combine
 
 INPUTS: 
 + (paths not all in this github)
-+ 
+
 OUTPUT: 
 + (path not in this github)
 
 # Data cleaning <a name="data-cleaning"></a>
 
 ## Removing citations <a name="citation-clean"></a>
-The python script [cleaning.py](cleaning.py) removes wikipedia-style citation artifacts (such as \[1\] or \[citation needed\]) from all entries in the Kaggle dataset.
-There are corresponding test cases in [test_cleaning.py](test_cleaning.py).
+The python script [cleaning](cleaning.py) removes wikipedia-style citation artifacts (such as \[1\] or \[citation needed\]) from all entries in the Kaggle dataset.
+There are corresponding test cases in [test_cleaning](test_cleaning.py).
 
 ## Genre cleaning <a name="genre-clean"></a>
 We need to have 15 or so high-level genres for use in the web interface. The CMU dataset is reasonably well formatted, but sometimes describes genres in ways that are unhelpful (e.g., subgenres, or combining genres like "romantic comedy" when we would prefer separate genres "romance" and "comedy"). 
 The Kaggle dataset is fairly messy, and we have to deal with inconsistent separators ("/" vs "," vs " - " vs " ") in addition to the issues from the CMU dataset. 
-The notebook [genre-clean.ipynb](genre-clean.ipynb) has functions that turn a given genre string into a set of genres to fix these issues.
+The notebook [genre-clean](genre-clean.ipynb) has functions that turn a given genre string into a set of genres to fix these issues.
 
 The notebook also merges these datasets together and combines the genre info. It matches movies based on title & release year (since with remakes, there can be multiple movies with the same title released in different years). We do some further cleaning and drop extraneous copies of movies with the same wikipedia URL, and we alltogether delete any remaining movies which have the same title & release year, as this was a very small fraction of the dataset.
 
@@ -69,10 +69,10 @@ OUTPUT:
 ### Revenue and summary
 We originally considered using revenue (as a proxy for popularity) to help weight the search results. In preparation for this, 
 
-The notebook [MergeTwoDataset.ipynb](MergeTwoDataset.ipynb) takes the original CMU dataset and merges its revenue column into the Kaggle dataset (with cleaned cast & director info).
+The notebook [MergeTwoDataset](MergeTwoDataset.ipynb) takes the original CMU dataset and merges its revenue column into the Kaggle dataset (with cleaned cast & director info).
 The merge is done based on shared title & release year.
 
-Then the notebook [combining-revenue-and-summary-fragments.ipynb](combining-revenue-and-summary-fragments.ipynb) merges the revenue and summary csv files into a single csv file.
+Then the notebook [combining-revenue-and-summary-fragments](combining-revenue-and-summary-fragments.ipynb) merges the revenue and summary csv files into a single csv file.
 
 However, even without this the model seemed to do a good job when manually testing on popular movies, and we worried this would make it too difficult to find obscure films, so we never ended up using this data. 
 We may in future run a comparison to see how the results actually compare.
