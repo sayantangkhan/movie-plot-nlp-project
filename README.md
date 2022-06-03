@@ -90,6 +90,7 @@ Thus despite doing well on the test set, it's still not suitable for the search 
 
 The front-end is built in [Flask](https://flask.palletsprojects.com/en/2.1.x/).
 To build and run the web-server, navigate to [web_interface](web_interface), and run the following commands.
+Note that if you simply cloned this repository as normal, you may also need to install and use [git lfs](https://git-lfs.github.com/) in order to correctly download the large data & model files.
 ```
 poetry env use python3.8
 poetry install
