@@ -79,11 +79,11 @@ However, we broke up the plot into chunks of 256 words and so for long plots, th
 This could be solved by increasing the max tokens the sentence embedder can intake, but this slows down inference considerably (which is why we chose not to given the time constraints).
 
 ### Okapi BM25
-We implemented this model to compare it to Embed-and-Rerank. This is based on TF-IDF approach, and does not use neural networks.
+We implemented this model to compare it to Embed-and-Rerank. Okapi is based on a TF-IDF approach, and does not use neural networks.
 Despite this, this model also achieves 84% accuracy on the IMDB dataset, although its misclassifications are of a different nature.
 
-Since this model just uses term-frequency, it does not understand synonyms, and fails to classify correctly when synonymous terms are present in the query and the plot summary.
-Thus despite doing well on the test set, it's still not suitable for the search engine, and the fact it does so well on the test set is an artifact of the test set rather than a quality of the model.
+Since the Okapi model just uses term-frequency, it does not understand synonyms, and fails to classify correctly when synonymous terms are present in the query and the plot summary.
+Despite doing well on the test set, it is still not suitable for the search engine, and the fact it does so well on the test set is an artifact of the test set rather than a quality of the model.
 
 ## Web frontend <a name="web-frontend"></a>
 
