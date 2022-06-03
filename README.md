@@ -1,9 +1,9 @@
 # Semantic search engine for movie plots
 
 This is a search engine that lets you find movies based on a sentence or two describing the plot.
-This was made as a part of the Erdös data science bootcamp.
+This project was made for the Erdös Institute Data Science Bootcamp.
 
-In the README, we describe the data gathering process, the preprocessing and cleanup, the architecture (with its flaws) of the classifier, and the web-frontend ([link](http://jupyter.sayantankhan.io/search) to web-frontend). 
+In the README, we describe the data gathering process, the preprocessing and cleanup, the architecture of the classifier (along with its flaws), and the web-frontend ([link](http://jupyter.sayantankhan.io/search) to web-frontend). 
 
 ### Table of contents
 1. [Data gathering](#data-gathering)
@@ -15,25 +15,25 @@ In the README, we describe the data gathering process, the preprocessing and cle
 
 ## Data gathering <a name="data-gathering"></a>
 
-We needed two kinds of data for the semantic search engine: first we needed the plot summaries of all the movies we could get. These are the movies that are actually searchable by the search engine.
+We needed two kinds of data for the semantic search engine: first we needed plot summaries for a large number of movies. Only movies in the data are recognizable by the search engine.
 This dataset was a combination of the [Kaggle Wikipedia Movie Plots](https://www.kaggle.com/datasets/jrobischon/wikipedia-movie-plots) dataset and the [CMU Movie Summary Corpus](http://www.cs.cmu.edu/~ark/personas/).
 
-The second kind of dataset we needed was a collection of example queries users would query the search engine for; we planned to train and test the performance on such a dataset.
-For the search engine to be a good search engine, we wanted it to be able to identify the movie based on very little detail, i.e. search queries needn't have names of characters involved (or actors), and just describe part of the plot in broad strokes.
-If the searches were more detailed, traditional search engine methods would suffice, just using keyword based searches.
+The second kind of dataset we needed was a collection of example queries users would input into the search engine; we planned to train and test the performance on such a dataset.
+We wanted the search engine to be able to identify the movie based on very little detail, i.e. search queries need not have names of characters or actors involved, and instead would just broadly describe part of the plot.
+If the searches were more detailed, traditional search engine methods would suffice.
 
-However, we did not have such an collection of user searches along with movies they were searching for.
+However, we did not have such a collection of user searches along with movies they were searching for.
 To get this data, we tried two different approaches. 
 
 ### Scraping IMDB <a name="imdb-scraping"></a>
 
 The first approach was to scrape IMDB user submitted summaries for short (and hopefully vague) summaries that could serve as a proxy for search queries users would make when searching for the corresponding movie. Our process was as follows:
 
-First, any movie on IMDB is given a distinct IMDB ID that serves as an identifier. Conveniently, any link pertaining to a particular movie is in one-to-one correspondence with its unique IMDB identifier. So, user generated summaries were always on the same URL---the only change was the IMDB ID. 
+First, any movie on IMDB is given a distinct IMDB ID that serves as an identifier. Conveniently, any link pertaining to a particular movie is in one-to-one correspondence with its unique IMDB identifier. So, user generated summaries were always on the same URL---the only variable was the IMDB ID. 
 
 Then, we utilized the requests module in concert with BeautifulSoup in order to scrape the user generated data from IMDB. We implemented the time module to add delay in each iteration of the for-loop so we would not overburden IMDB's servers. 
 
-Due to the lengthy run time and other unknowns (internet cutting off, laptop rebooting, etc.), we had the scraper save its output periodically to Google Drive. When a crash occured, we rebooted the program at the last iteration and continued from there. Once all data had been scraped, we concatenated the CSV files and added them to the existing data as a new column. This whole process was for the first user generated summary; later on, we repeated this process for the second user generated summary (when available) as well.
+Due to the lengthy run time and other unknowns (internet cutting off, laptop rebooting, etc.), we had the scraper save its output periodically to Google Drive. When a crash occured, we rebooted the program at the last iteration and continued from there. Once all data had been scraped, we concatenated the CSV files and added them to the existing data as a new column. This whole process was for the first available user generated summary; later on, we repeated this process for the second user generated summary (when available).
 
 ### Generating data using T5 <a name="summary-generation"></a>
 
