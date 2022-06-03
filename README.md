@@ -41,7 +41,7 @@ The other approach we tried in parallel with the scraping was to generate reason
 The hope was that the text summarizer would leave out a lot of details, and get rid of most identifying keywords, leaving only broad outlines.
 
 [This notebook](notebooks/cleaning-and-preprocessing/plot-summarizer.ipynb) displays what the summary looks like for different pre-trained text summarizers.
-Based on the output, we decided that the [T5 summarizer](https://huggingface.co/docs/transformers/model_doc/t5) generated the summary that left out the most keywords, making it the most suitable for our purposes.
+Based on the output, we decided that the [T5 summarizer](https://huggingface.co/docs/transformers/model_doc/t5) generated summaries that left out the most keywords, but were nonetheless worried about the implications of using the same data as a source for training and target data. For this reason, we used the IMDB scraped data going forward.
 
 ## Preprocessing and cleanup <a name="preprocessing"></a>
 
