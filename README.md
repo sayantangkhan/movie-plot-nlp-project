@@ -11,7 +11,9 @@ In the README, we describe the data gathering process, the preprocessing and cle
     2. [Generating data using T5](#summary-generation)
 2. [Preprocessing and cleanup](#preprocessing)
 3. [Classifier models](#classifier)
-4. [Web frontend](#web-frontend)
+    1. [Embed and Rerank](#embed)
+    2. [Okapi BM25](#okapi)
+5. [Web frontend](#web-frontend)
 
 ## Data gathering <a name="data-gathering"></a>
 
@@ -64,7 +66,7 @@ At the end, we merged the Kaggle, CMU, and scraped IMDB data based on movies tha
 
 We tried out two different approaches to classifying queries: one of them is based on [Sentence Embeddings](https://www.sbert.net/index.html): this method is called _Embed-and-Rerank_ and the other is the more classical [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25).
 
-### Embed-and-Rerank
+### Embed-and-Rerank <a name="embed"></a>
 
 Embed-and-Rerank is a 3-step process.
 
@@ -78,7 +80,7 @@ However, we broke up the plot into chunks of 256 words and so for long plots, th
 
 This could be solved by increasing the max tokens the sentence embedder can intake, but this slows down inference considerably (which is why we chose not to given the time constraints).
 
-### Okapi BM25
+### Okapi BM25 <a name="okapi"></a>
 We implemented this model to compare it to Embed-and-Rerank. Okapi is based on a TF-IDF approach, and does not use neural networks.
 Despite this, this model also achieves 84% accuracy on the IMDB dataset, although its misclassifications are of a different nature.
 
