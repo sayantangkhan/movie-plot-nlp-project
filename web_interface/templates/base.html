@@ -16,12 +16,16 @@
             font-size: 20px;
         }
 
-	.results {
+	    .results {
             text-align: center;
-	}
+	    }
 
         .other {
             font-size: 15px;
+        }
+
+        nav {
+            text-align:center;
         }
 
         nav a {
@@ -56,28 +60,16 @@
         }
 
         .buttondiv {
-            width: 100vw;
             margin: 5px auto;
+            margin-bottom: 40px;
             text-align: center;
-        }
-        .button {
-            text-align: center;
-            background-color: #cfcfcf;
-            border: 1px solid black;
-            color: #d64161;
-            padding: 10px 10px;
-            display: inline-block;
-        }
-
-        .button:hover {
-            background-color: #f2f2f2;
         }
     </style>
 </head>
 
 <body>
     <nav>
-        <center><a href="{{ url_for('index') }}">Movie Search</a></center>
+        <a href="{{ url_for('index') }}">Movie Search</a>
     </nav>
     <hr>
     <div class="content">

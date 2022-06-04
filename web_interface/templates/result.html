@@ -6,14 +6,16 @@
     {% for res in search_results %}
     <div class='singleres'>
         <p><a href="{{ res[0][2] }}">{{ res[0][0] }} ({{ res[0][1] }})</a></p>
-        <p>Score: {{ res[1] }}</p>
+        <p>Score: {{ 100*res[1] }}</p>
     </div>
     {% endfor %}
 </div>
 <p class="help">
 {{helpful_message}}
 </p>
-<div class="buttondiv">
-<a class="button" href="{{url_for('index')}}">Try Again</a>
-</div>
+<form method="GET" action="{{url_for('index')}}">
+    <button type="submit">
+        Try Again
+    </button>
+</form>
 {% endblock %}

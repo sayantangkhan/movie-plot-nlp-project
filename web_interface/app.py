@@ -3,7 +3,7 @@ from flask import Flask, render_template, redirect, request, url_for
 from inference import semantic_query
 import logging
 
-GENRE_CHOICES = ['Any', 'drama', 'comedy', 'romance', 'action', 'thriller', 'adventure', 'crime', 'indie', 'musical', 'horror', 'documentary', 'animation', 'mystery', 'science fiction', 'fantasy']
+GENRE_CHOICES = ['Any', 'drama', 'comedy', 'romance', 'action', 'thriller', 'adventure', 'crime', 'indie', 'musical', 'horror', 'documentary', 'animation', 'mystery', 'science-fiction', 'fantasy']
 YEAR_CHOICES = ['Any', '2010', '2000', '1990', '1980', '1970', '1960', '1950', '1940', '1930', '1920']
 
 SEARCH_RESULTS = []
