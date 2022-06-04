@@ -26,7 +26,7 @@ def satisfies_genre_constraint(genre, movie_id, wiki_dataset):
     if genre == "Any":
         return True
     movie_genres = wiki_dataset['Genre'][movie_id]
-    if genre == "sci-fi":
+    if genre == "science-fiction":
         return "science fiction" in movie_genres or "science-fiction" in movie_genres
     else:
         return genre in movie_genres
