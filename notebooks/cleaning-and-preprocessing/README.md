@@ -62,7 +62,7 @@ We may in future run a comparison to see how the results actually compare.
 
 ### More revenues
 
-The notebook [ttlDmerging](ttlDmerging.ipynb) takes the revenue, overview, and popularity from the metadata dataset and merges them into the Kaggle dataset.
+The notebook [ttlDmerging](ttlDmerging.ipynb) takes the overview, popularity and IMDB tt id from the metadata dataset and merges them into the Kaggle dataset. The IMDB tt ids are used in the web scraping for user contributed plot summaries.
 
 # Preprocessing <a name="preprocessing"></a>
 
