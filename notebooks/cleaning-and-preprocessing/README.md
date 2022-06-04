@@ -1,3 +1,5 @@
+# Data Cleaning & Preprocessing
+
 These are all of the notebooks used for data gathering, data cleaning, data exploration, and preprocessing.
 
 ### Table of contents
@@ -7,9 +9,8 @@ These are all of the notebooks used for data gathering, data cleaning, data expl
    2. [Genre cleaning](#genre-clean)
    3. [Prep for future](#prep-clean)
 3. [Preprocessing](#preprocessing)
-   1. [Generating Wikipedia summary fragments](#wiki-summary)
+   1. [Fragmenting long plots](#plot-split)
    2. [Generating cross-encoder training data](#encoder-train-data)
-   3. [Splitting plot](#plot-split)
 
 # Data gathering <a name="data-gathering"></a>
 
@@ -22,13 +23,8 @@ We supplemented the above datasets with data scraped from IMDB.
 The notebook [IMDB_Web_Scraping](IMDB_Web_Scraping.ipynb) uses BeautifulSoup to get the first user summary for each movie in our dataset, using the IMDB id's coming from the CMU dataset.
 Modifying some indices then allows one to scrape the second user summary instead.
 
-This data is then used in the  notebook [Combined_Yili_and_Ethan_Scrape](Combined_Yili_and_Ethan_Scrape.ipynb), which combines the scraped data for getting the 1st summary and the 2nd summary into one csv file.
+This data is then used in the notebook [Combined_Yili_and_Ethan_Scrape](Combined_Yili_and_Ethan_Scrape.ipynb), which combines the scraped data for getting the 1st summary and the 2nd summary into one csv file.
 
-INPUTS: 
-+ (paths not all in this github)
-
-OUTPUT: 
-+ (path not in this github)
 
 # Data cleaning <a name="data-cleaning"></a>
 
@@ -43,13 +39,6 @@ The notebook [genre-clean](genre-clean.ipynb) has functions that turn a given ge
 
 The notebook also merges these datasets together and combines the genre info. It matches movies based on title & release year (since with remakes, there can be multiple movies with the same title released in different years). We do some further cleaning and drop extraneous copies of movies with the same wikipedia URL, and we alltogether delete any remaining movies which have the same title & release year, as this was a very small fraction of the dataset.
 
-INPUTS: 
-+ Data/wiki_movie_plots_deduped.csv.zip
-+ Data/cmu_movie_boxoffice.tsv
-
-OUTPUT: 
-+ Data/wiki_plots_with_genres.csv.zip 
-
 ## Cleaning to prep for future work <a name="prep-clean"></a>
 
 ### Cast and director cleaning
@@ -59,12 +48,6 @@ The notebook [CastAndDirectorClean](CastAndDirectorClean.ipynb) renames the colu
 It then works on cleaning the cast & director info, for future usage in the web interface. The data is messy in several ways: it can have different separators ("and", "&", "/", "\r\n", and ",") and it can have various parentheticals with "[...]" or "(...)". Sometimes, entries also include header words like "Director:" or "Cast:", and these are removed as well. Several special cases are also manually dealt with.
 
 The output is written to file, with all "unknown" cast/directors removed.
-
-INPUT: 
-+ Data/wiki_plots_with_genres.csv
-
-OUTPUT: 
-+ Data/wiki_plots_with_genres_c2.csv
 
 ### Revenue and summary
 We originally considered using revenue (as a proxy for popularity) to help weight the search results. In preparation for this, 
@@ -77,62 +60,31 @@ Then the notebook [combining-revenue-and-summary-fragments](combining-revenue-an
 However, even without this the model seemed to do a good job when manually testing on popular movies, and we worried this would make it too difficult to find obscure films, so we never ended up using this data. 
 We may in future run a comparison to see how the results actually compare.
 
-INPUTS: 
-+ Data/cmu_movie_boxoffice.tsv
-+ Data/wiki_plots_with_genres_c2.csv
-+ Data/wiki_movies_no_cites.zip
-+ Data/wiki_movie_plots_deduped_c2.csv
-
-OUTPUT: 
-+ Data/wiki_with_revenue.csv (actually a zip file)
-
 ### More revenues
 
 The notebook [ttlDmerging](ttlDmerging.ipynb) takes the revenue, overview, and popularity from the metadata dataset and merges them into the Kaggle dataset.
 
-INPUTS:
-+ Data/movies_metadata.csv
-+ Data/wiki_plots_with_genres_c2.csv
-OUTPUT:
-+ Data/wiki_plots_with_genres_c3.csv
-
 # Preprocessing <a name="preprocessing"></a>
 
-## Generating Wikipedia summary fragments <a name="wiki-summary"></a>
+## Fragmenting long plot<a name="plot-split"></a>
 
-The notebook [summary_generator](summary_generator.ipynb) takes the Kaggle dataset (with citations removed) and creates a new dataset which contains fragments of the plots and a corresponding sentence randomly chosen from a summary of that chunk.
-The fragments of the plots can be the 1st, 2nd, or 3rd third of the plot, or the 1st or 2nd half of the plot (stored in column PlotFragments). Then T5 is used to summarize this fragment, and a sentence is randomly chosen from this summary (which is then stored in column SummaryFragment). 
-A MovieID column is used to link the rows back to the corresponding row in the original dataset.
-To keep the datasize managable, instead of adding all 5 options for every movie, there is a 62.5% chance of adding any given fragment to the new dataset.
+To vectorize the plot descriptions that will be stored in the model, we need to break the plot into shorter chunks.
+The notebook [imdb_summaries](imdb_summaries.ipynb) takes the long plot descriptions from wikipedia and breaks long paragraphs into chunks with at most 256 tokens (words) each, in a way that doesn't split up sentences, and which doesn't mix sentences from different paragraphs within the same chunk. This allows each movie to be represented by multiple different embedded vectors, each representing a different piece of the plot.
 
-INPUT:
-+ Data/wiki_movies_no_cites.csv
-
-OUTPUT:
-+ Data/summaries.csv
 
 ## Generating cross-encoder training data <a name="encoder-train-data"></a>
 
-The cross-encoder needs pairs of text with similarity scores for training purposes.
-The notebook [pruning-summaries](pruning-summaries.ipynb) uses the plot fragments & corresponding random sentences from summaries already generated and uses this to get the similarity data.
+The cross-encoder needs pairs of text of the form (simulated user query, fragment of plot description) along with similarity scores for training purposes. First, we need to generate simulated user queries for this training.
+The notebook [summary_generator](summary_generator.ipynb) takes the Kaggle dataset (with citations removed) and creates a new dataset which contains fragments of the plots and a corresponding sentence randomly chosen from a summary of that chunk.
+The fragments of the plots can be the 1st, 2nd, or 3rd third of the plot, or the 1st or 2nd half of the plot (stored in column PlotFragments). Then T5 is used to summarize this fragment, and a sentence is randomly chosen from this summary (which is then stored in column SummaryFragment). This sentence will represent a user query.
+A MovieID column is used to link the rows back to the corresponding row in the original dataset.
+To keep the datasize managable, instead of adding all 5 options for every movie, there is a 62.5% chance of adding any given fragment to the new dataset.
+
+After generating that data, the notebook [pruning-summaries](pruning-summaries.ipynb) uses the plot fragments & corresponding random sentences from summaries already generated and uses this to assign the similarity score.
 Here's how the scores are assigned:
 + a fragment & corresponding summarized sentence get a high similarity score;
 + a fragment from one movie & summarized sentence from a totally different movie get a low similarity score;
 + a fragment & summarized sentence from the same movie, but different chunks (e.g., fragment from middle third, summarized sentence from first half) get a medium similarity score.
+
+
 The pairs are randomly chosen so that about 40% get a high score and about 60% get a low score (with a negligible amount getting a medium score).
-
-INPUT/OUTPUT:
-+ Data/summaries.csv
-
-
-## Fragmenting long plot<a name="plot-split"></a>
-
-To vectorize the plot descriptions, we need to break the plot into shorter trunks.
-The notebook [imdb_summaries](imdb_summaries.ipynb) takes the long plot descriptions from wikipedia and breaks long paragraphs into chunks with at most 256 tokens (words) each, in a way that doesn't split up sentences, and which doesn't mix sentences from different paragraphs within the same chunk.
-
-INPUT:
-+ Data/with_imdb_scraped_no_dpus_2.csv
-
-OUTPUT:
-+ Data/imdb_plots.csv
-
