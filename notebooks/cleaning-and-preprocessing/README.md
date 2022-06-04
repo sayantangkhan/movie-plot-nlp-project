@@ -49,20 +49,18 @@ It then works on cleaning the cast & director info, for future usage in the web 
 
 The output is written to file, with all "unknown" cast/directors removed.
 
-### Revenue and summary
-We originally considered using revenue (as a proxy for popularity) to help weight the search results. In preparation for this, 
+### Popularity, revenue, and summaries
+We originally considered using a measure of popularity to to help weight the search results. In preparation for this, we merged in popularity data and revenue data (as a proxy for popularity) into our main dataset.
 
 The notebook [MergeTwoDataset](MergeTwoDataset.ipynb) takes the original CMU dataset and merges its revenue column into the Kaggle dataset (with cleaned cast & director info).
 The merge is done based on shared title & release year.
 
 Then the notebook [combining-revenue-and-summary-fragments](combining-revenue-and-summary-fragments.ipynb) merges the revenue and summary csv files into a single csv file.
 
+The notebook [ttlDmerging](ttlDmerging.ipynb) takes the overview, popularity and IMDB tt id from the metadata dataset and merges them into the Kaggle dataset. The IMDB tt ids are used in the web scraping for user contributed plot summaries.
+
 However, even without this the model seemed to do a good job when manually testing on popular movies, and we worried this would make it too difficult to find obscure films, so we never ended up using this data. 
 We may in future run a comparison to see how the results actually compare.
-
-### More revenues
-
-The notebook [ttlDmerging](ttlDmerging.ipynb) takes the overview, popularity and IMDB tt id from the metadata dataset and merges them into the Kaggle dataset. The IMDB tt ids are used in the web scraping for user contributed plot summaries.
 
 # Preprocessing <a name="preprocessing"></a>
 
