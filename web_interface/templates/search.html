@@ -2,15 +2,17 @@
 
 {% block content %}
 <p class="help">
-Looking for a movie you watched, but can't remember the title? This is the tool for you! Enter some things you remember about the movie in the search bar. If you'd like to narrow the results, you can restrict yourself to a particular genre and/or approximate year of release. Then hit search!
+Looking for a movie you watched, but can't remember the title? This is the tool for you! Enter some things you remember about the movie in the search bar. 
 </p>
 <div class="searchbox">
     <form method="post">
         <label for="query">{% block title %} Search query {% endblock %}</label>
-        <br>
         <input type="text" size="50" name="query" id="query" placeholder="Enter search query"
             value="{{ request.form['query'] }}">
         <br>
+    <p class="help">
+    You can <strong>optionally</strong> restrict your results to a particular genre and/or approximate year of release.
+    </p>
       <div class="optional">
         <label for="year" class="other">Approximate year</label>
         <SELECT name="year" id="year">
@@ -27,7 +29,9 @@ Looking for a movie you watched, but can't remember the title? This is the tool 
         </SELECT>
       </div>
         <br>
+        <div class="buttondiv">
         <button type="submit">Search</button>
+        </div>
     </form>
 </div>
 {% endblock %}

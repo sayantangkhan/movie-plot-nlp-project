@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<p class="help">
+Here are our top {{num_res}} best matches.
+</p>
 <div class="results">
     <h2>{% block title %}Search results{% endblock %}</h2>
-    {% for res in search_results %}
+    {% for i in range(num_res) %}
     <div class='singleres'>
-        <p><a href="{{ res[0][2] }}">{{ res[0][0] }} ({{ res[0][1] }})</a></p>
-        <p>Score: {{ 100*res[1] }}</p>
+        <p><strong>#{{i+1}}</strong> <a href="{{ search_results[i][0][2] }}">
+            {{ search_results[i][0][0] }} ({{ search_results[i][0][1] }})
+        </a></p>
+        <p>Score: {{ 100*search_results[i][1] }}</p>
     </div>
     {% endfor %}
 </div>
@@ -14,8 +19,10 @@
 {{helpful_message}}
 </p>
 <form method="GET" action="{{url_for('index')}}">
+    <div class="buttondiv">
     <button type="submit">
         Try Again
     </button>
+    </div>
 </form>
 {% endblock %}
