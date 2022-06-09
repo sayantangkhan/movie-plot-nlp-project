@@ -2,8 +2,9 @@
 
 This is a search engine that lets you find movies based on a sentence or two describing the plot.
 This project was made for the Erdös Institute Data Science Bootcamp.
+**UPDATE**: This project led to our team winning the Spring 2022 Data Science Bootcamp.
 
-In the README, we describe the data gathering process, the preprocessing and cleanup, the architecture of the classifier (along with its flaws), and the web-frontend ([link](http://jupyter.sayantankhan.io/search) to web-frontend).
+In the README, we describe the data gathering process, the preprocessing and cleanup, the architecture of the classifier (along with its flaws), and the web-frontend ([link](http://app.sayantankhan.io/search) to web-frontend).
 
 ### Table of contents
 1. [Data gathering](#data-gathering)
@@ -98,4 +99,4 @@ poetry install
 poetry shell
 flask run
 ```
-Click on [this link](http://jupyter.sayantankhan.io/search) to go to the hosted version of the web-interface.
+Click on [this link](http://app.sayantankhan.io/search) to go to the hosted version of the web-interface.
