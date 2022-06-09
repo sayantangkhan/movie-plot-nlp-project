@@ -130,3 +130,5 @@ dmypy.json
 /Data/id_and_summary.csv
 /inference-models/corpus_embeddings.pt
 .DS_Store
+/data/embedded_corpus_tensor.pt
+/data/wikipedia_plots.pkl
