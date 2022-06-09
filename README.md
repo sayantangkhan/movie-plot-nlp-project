@@ -3,16 +3,16 @@
 This is a search engine that lets you find movies based on a sentence or two describing the plot.
 This project was made for the Erdös Institute Data Science Bootcamp.
 
-In the README, we describe the data gathering process, the preprocessing and cleanup, the architecture of the classifier (along with its flaws), and the web-frontend ([link](http://jupyter.sayantankhan.io/search) to web-frontend). 
+In the README, we describe the data gathering process, the preprocessing and cleanup, the architecture of the classifier (along with its flaws), and the web-frontend ([link](http://jupyter.sayantankhan.io/search) to web-frontend).
 
 ### Table of contents
 1. [Data gathering](#data-gathering)
-    1. [Scraping IMDB](#imdb-scraping)
-    2. [Generating data using T5](#summary-generation)
+	1. [Scraping IMDB](#imdb-scraping)
+	2. [Generating data using T5](#summary-generation)
 2. [Preprocessing and cleanup](#preprocessing)
 3. [Classifier models](#classifier)
-    1. [Embed and Rerank](#embed)
-    2. [Okapi BM25](#okapi)
+	1. [Embed and Rerank](#embed)
+	2. [Okapi BM25](#okapi)
 5. [Web frontend](#web-frontend)
 
 ## Data gathering <a name="data-gathering"></a>
@@ -25,15 +25,15 @@ We wanted the search engine to be able to identify the movie based on very littl
 If the searches were more detailed, traditional search engine methods would suffice.
 
 However, we did not have such a collection of user searches along with movies they were searching for.
-To get this data, we tried two different approaches. 
+To get this data, we tried two different approaches.
 
 ### Scraping IMDB <a name="imdb-scraping"></a>
 
 The first approach was to scrape IMDB user submitted summaries for short (and hopefully vague) summaries that could serve as a proxy for search queries users would make when searching for the corresponding movie. Our process was as follows:
 
-First, any movie on IMDB is given a distinct IMDB ID that serves as an identifier. Conveniently, any link pertaining to a particular movie is in one-to-one correspondence with its unique IMDB identifier. So, user generated summaries were always on the same URL---the only variable was the IMDB ID. 
+First, any movie on IMDB is given a distinct IMDB ID that serves as an identifier. Conveniently, any link pertaining to a particular movie is in one-to-one correspondence with its unique IMDB identifier. So, user generated summaries were always on the same URL---the only variable was the IMDB ID.
 
-Then, we utilized the requests module in concert with BeautifulSoup in order to scrape the user generated data from IMDB. We implemented the time module to add delay in each iteration of the for-loop so we would not overburden IMDB's servers. 
+Then, we utilized the requests module in concert with BeautifulSoup in order to scrape the user generated data from IMDB. We implemented the time module to add delay in each iteration of the for-loop so we would not overburden IMDB's servers.
 
 Due to the lengthy run time and other unknowns (internet cutting off, laptop rebooting, etc.), we had the scraper save its output periodically to Google Drive. When a crash occured, we rebooted the program at the last iteration and continued from there. Once all data had been scraped, we concatenated the CSV files and added them to the existing data as a new column. This whole process was for the first available user generated summary; later on, we repeated this process for the second user generated summary (when available).
 
@@ -53,14 +53,14 @@ Every movie initially had a string representing a list of genres associated to i
 + Standardized spellings for genres (e.g., "sci-fi" and "science fiction" both appeared, so we standardized to "science-fiction").
 + Standardized separators, since sometimes genres could be separated with "/", ",", " - ", or just a space " ".
 + Added some additional broader genres for smaller subgenres (e.g., movies with the genres "slasher" or "zombie" got the genre "horror" added to the list).
-+ Broke intersectional genres into broader genres (e.g., "romantic comedy" split into the two genres "romance" and "comedy"). 
++ Broke intersectional genres into broader genres (e.g., "romantic comedy" split into the two genres "romance" and "comedy").
 We did this to both lists of associated genres, and merged them together.
 
 We eventually plan to improve the web interface and allow for filtering by cast members. To prepare for this, we also cleaned the cast & director info. Originally, the lists of directors and of cast members were linked in multiple ways (sometime with "and", "/", or ","). We standardized them to all be separated by commas. And sometimes, the lists would start with the word "Director: " or "Cast: ", which we removed.
 
 We also had to deal with some duplicated data. For Kaggle datasets, some movies had duplicated URLs, usually due to several different releases (e.g., in different languages) with different titles sharing the same wikipedia page. For those, we dropped all but the first entry with that URL. We were then still left with some Kaggle and CMU entries which shared a title and release year; for scraped IMDB data, a few movies had duplicated IMDB ids. This was a small percentage of the original data, so we deleted all copies of these remaining duplicates.
 
-At the end, we merged the Kaggle, CMU, and scraped IMDB data based on movies that had the same title & release year. 
+At the end, we merged the Kaggle, CMU, and scraped IMDB data based on movies that had the same title & release year.
 
 ## Classifier models <a name="classifier"></a>
 
@@ -85,14 +85,14 @@ We implemented this model to compare it to Embed-and-Rerank. Okapi is based on a
 Despite this, this model also achieves 84% accuracy on the IMDB dataset, although its misclassifications are of a different nature.
 
 Since the Okapi model just uses term-frequency, it does not understand synonyms, and fails to classify correctly when synonymous terms are present in the query and the plot summary.
-Despite doing well on the test set, the types of errors Okapi made were not suitable for this search engine's purposes; that is, we would like the model to be more robust against different words a user may choose to describe a plot. Therefore, this model was not part of the final product. 
+Despite doing well on the test set, the types of errors Okapi made were not suitable for this search engine's purposes; that is, we would like the model to be more robust against different words a user may choose to describe a plot. Therefore, this model was not part of the final product.
 
 ## Web frontend <a name="web-frontend"></a>
 
 The front-end is built in [Flask](https://flask.palletsprojects.com/en/2.1.x/).
-To build and run the web-server, navigate to [web_interface](web_interface), and run the following commands.
-Note that if you simply cloned this repository as normal, you may also need to install and use [git lfs](https://git-lfs.github.com/) in order to correctly download the large data & model files.
+To build and run the web-server, navigate to [web_interface](web_interface), and run the following commands (from the project root directory) to reconstruct the data files and set up and start the server.
 ```
+sh scripts/reconstruct_large_data_files.sh
 poetry env use python3.8
 poetry install
 poetry shell
